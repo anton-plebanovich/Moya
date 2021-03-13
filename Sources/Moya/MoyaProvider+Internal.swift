@@ -276,8 +276,15 @@ private extension MoyaProvider {
 
         let completionHandler: RequestableCompletion = { response, request, data, error in
             let result = convertResponseToResult(response, request: request, data: data, error: error)
-            // Inform all plugins about the response
-            plugins.forEach { $0.didReceive(result, target: target) }
+            
+            if progressAlamoRequest.isCancelled {
+                // Inform all plugins about the cancellation
+                plugins.forEach { $0.didCancel(progressAlamoRequest, target: target) }
+            } else {
+                // Inform all plugins about the response
+                plugins.forEach { $0.didReceive(result, target: target) }
+            }
+            
             if let progressCompletion = progressCompletion {
                 let value = try? result.get()
                 switch progressAlamoRequest {
