@@ -12,6 +12,9 @@ public protocol PluginType {
 
     /// Called immediately before a request is sent over the network (or stubbed).
     func willSend(_ request: RequestType, target: TargetType)
+    
+    /// Called when request was cancelled.
+    func didCancel(_ request: RequestType, target: TargetType)
 
     /// Called after a response has been received, but before the MoyaProvider has invoked its completion handler.
     func didReceive(_ result: Result<Moya.Response, MoyaError>, target: TargetType)
@@ -23,6 +26,7 @@ public protocol PluginType {
 public extension PluginType {
     func prepare(_ request: URLRequest, target: TargetType) -> URLRequest { return request }
     func willSend(_ request: RequestType, target: TargetType) { }
+    func didCancel(_ request: RequestType, target: TargetType) { }
     func didReceive(_ result: Result<Moya.Response, MoyaError>, target: TargetType) { }
     func process(_ result: Result<Moya.Response, MoyaError>, target: TargetType) -> Result<Moya.Response, MoyaError> { return result }
 }
